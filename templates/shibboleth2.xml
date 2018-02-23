@@ -39,7 +39,7 @@
 
 		<!--  Set the support email address, which is shown in error messages. -->
 
-		<Errors supportContact="{{SUPPORT}}" logoLocation="/shibboleth-sp/logo.jpg" styleSheet="/shibboleth-sp/main.css"/>
+		<Errors supportContact="{{SUPPORT}}" logoLocation="{{LOGO}}" styleSheet="/shibboleth-sp/main.css"/>
         
         <!--  
         The address of the federation's SAML2 metadata. Configure it's address and the necessary filter according 

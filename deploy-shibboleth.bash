@@ -35,6 +35,7 @@ add_setting metadata https://haka.funet.fi/metadata/haka_test_metadata_signed.xm
 add_setting metadata_cert https://wiki.eduuni.fi/download/attachments/27297785/haka_testi_2015_sha2.crt
 add_setting discovery_service https://testsp.funet.fi/shibboleth/WAYF
 add_setting attribute_map https://wiki.eduuni.fi/download/attachments/27297794/attribute-map.xml
+add_setting logo /shibboleth-sp/logo.jpg
 add_setting support your@support.email
 
 # parse arguments
@@ -93,8 +94,9 @@ fi
 # build for the java application
 
 if [[ ! $(oc get bc shibboleth-java 2> /dev/null) ]]; then
-  oc new-build -D - < dockerfiles/shibboleth-java/Dockerfile --name shibboleth-java
-  oc start-build shibboleth-java https://github.com/chipster/shibboleth-openshift.git --follow
+  oc new-build https://github.com/chipster/shibboleth-openshift.git -D - < dockerfiles/shibboleth-java/Dockerfile --name shibboleth-java
+  sleep 1
+  oc logs -f bc/shibboleth-java
 else
   echo "Using existing shibboleth-java build. Run the following commands to update it later:"
   echo "  bash update_dockerfile.bash shibboleth-java"
@@ -166,6 +168,7 @@ cat templates/shibboleth2.xml \
 | sed -e "s#{{DISCOVERY_SERVICE}}#$(get_setting discovery_service)#g" \
 | sed -e "s#{{SUPPORT}}#$(get_setting support)#g" \
 | sed -e "s#{{METADATA}}#$(get_setting metadata)#g" \
+| sed -e "s#{{LOGO}}#$(get_setting logo)#g" \
 > tmp/shibboleth2.xml
 
 echo ""
@@ -267,7 +270,7 @@ echo "** SP Basic Information"
 echo "Entity Id                                             $service_url"
 echo "Service Name (Finnish)                                <fill-in>"    
 echo "Service Description (Finnish)                         <fill-in>"    
-echo "Service Login Page URL                                $service_url/Shibboleth.sso/Login"
+echo "Service Login Page URL                                <login-page-for-humans>"
 echo "Discovery Response URL                                $service_url/Shibboleth.sso/Login"
 echo "urn:oasis:names:tc:SAML:2.0:nameid-format:transient   x"
 echo "eduGain                                               <e.g. unselected>"
