@@ -196,7 +196,7 @@ If you want to delete all builds created by this script
 oc delete bc/shibboleth; oc delete is/shibboleth; oc delete bc/shibbboleth-java; oc delete is/shibboleth-java
 ```
 
-If you want to delete everything else created by this script. If you used different name, the script will print you the correct command.
+If you want to delete everything else created by this script. In case you used different name, the script will print you the correct command.
 
 ```bash
 oc delete dc/shibboleth; oc delete route/shibboleth; oc delete service/shibboleth; oc delete secret shibboleth-shibd-conf; oc delete secret shibboleth-apache-conf; oc delete secret shibboleth-apache-html;
