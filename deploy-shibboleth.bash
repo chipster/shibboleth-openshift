@@ -1,4 +1,6 @@
 #!/bin/bash
+# go to the diretory where the script is
+cd "$(dirname "$0")"
 
 set -e
 
@@ -73,6 +75,9 @@ name="$(get_setting name)"
 
 # build an image with apache and shibd
 
+# Unfortunately the ´oc´ command doesn't accept the file path directly, but we have 
+# pass it from the standard input.
+
 if [[ ! $(oc get bc shibboleth 2> /dev/null) ]]; then
   oc new-build --name shibboleth -D - < dockerfiles/shibboleth/Dockerfile
   sleep 1
@@ -99,6 +104,15 @@ fi
 
 
 # deploy application
+
+# Expose the Apache's port 8000 and terminate the TLS on the load balancer. Disable 
+# redirects from *http* to *https* by setting ´--insecure-policy=None´, because the 
+# same is recommended also in more traditional setups (where TLS is terminated in the Apache). 
+# This will use a OpenShift's wildcard TLS certificate. Consider getting a host-specific 
+# certificate and terminating the TLS in the Apache instead. I'm not aware of any direct 
+# risk associated with this wildcard solution, but your own certificate would be definitely 
+# better. 
+
 
 if [[ ! $(oc get dc "$name" 2> /dev/null) ]]; then
   oc new-app shibboleth-java --name "$name"
@@ -156,8 +170,18 @@ cat templates/shibboleth2.xml \
 
 echo ""
 
-# map all attributes
+# Before your service gets the attributes you requested, those must be mapped. By default 
+# only to eduPersonPrincipalName attribute is mapped to "eppn" variable. After loggiing in
+# in 'SERVICE_URL/Shibboleth.sso/Login´ you should see your new attributes listed in 
+# 'SERVICE_URL/Shibboleth.sso/Session´. The values are hidden, but you will see them in 
+# the test application.
+
 curl -s $(get_setting attribute_map) > tmp/attribute-map.xml
+
+# The SAML2 metadata describes all the member SPs and IdPs of the federation. The 
+# federation signs it with their own private key and we can check its authenticity 
+# with their certificate. Download their certificate.
+
 curl -s $(get_setting metadata_cert) > tmp/metadata.crt
 
 # evaluate the "~" to absolute path
@@ -167,6 +191,26 @@ if [ ! -d $cert_dir ]; then
   echo "ERROR cert_dir $cert_dir does not exist"
   exit 1
 fi
+
+# We need a private key and its certificate to sign our authentication messages to the 
+# IdP and decrypt information we get from it. Luckily a self-signed certificate is enough, 
+# so we can simply generate these. We are going to generate the key in the container and 
+# then copy it to your laptop.
+
+# Basically you can invent any unique string for it the entityID , but SERVICE_URL is a good 
+# choice. We need some place with write permissions to save the keys for a minute. We'll 
+# use /tmp now, because there we have write permissions. shib-keygen will try to change the
+# owner of the key file, which is not possible with these permissions. We'll have to find out 
+# the current uid and groop and pass them to shib-keygen to suppress ugly warnings about this.
+
+# There should be a ´oc cp´ command for copying files, but for some reason it didn't do 
+# anything (´oc cp shibboleth:/tmp/sp-cert.pem ~/secure/sp-cert.pem´), so I used ´oc rsh´ 
+# instead.
+
+# Store the private key sp-cert.pem in a such place on your computer that you don't 
+# accidentally  make it public (for example by pushing it to a code repo). The second file, 
+# ´sp-cert.pem´ will be public anyway, but let's keep it in the same directory, because we are 
+# going to use them together.
 
 if [ ! -f $cert_dir/sp-key.pem ]; then
   echo "Private key $cert_dir/sp-key.pem does not exist. Generating it"
