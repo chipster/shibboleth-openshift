@@ -135,7 +135,7 @@ oc rsh dc/shibboleth cat /var/log/shibboleth/shibd.log
 Your service's metadata
 ```bash
 curl SERVICE_URL/Shibboleth.sso/Metadata
-´´´
+```
 
 ## Making changes
 
