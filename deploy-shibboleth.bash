@@ -94,11 +94,11 @@ fi
 
 if [[ ! $(oc get bc shibboleth-java 2> /dev/null) ]]; then
   oc new-build -D - < dockerfiles/shibboleth-java/Dockerfile --name shibboleth-java
-  oc start-build shibboleth-java --from-dir ../sso-test/ --follow
+  oc start-build shibboleth-java https://github.com/chipster/shibboleth-openshift.git --follow
 else
   echo "Using existing shibboleth-java build. Run the following commands to update it later:"
   echo "  bash update_dockerfile.bash shibboleth-java"
-  echo "  oc start-build shibboleth-java --from-dir ../sso-test --follow"
+  echo "  oc start-build shibboleth-java --from-dir . --follow"
   echo ""
 fi
 
@@ -313,7 +313,7 @@ echo "If you want to delete all builds created by this script"
 echo "    oc delete bc/shibboleth; oc delete is/shibboleth; oc delete bc/shibbboleth-java; oc delete is/shibboleth-java"
 echo ""
 echo "If you want to delete everything else created by this script"
-echo "    oc delete dc/$name; oc delete route/$name; oc delete service/$name; oc delete secret $name-shibd-conf; oc delete secret $name-apache-conf"
+echo "    oc delete dc/$name; oc delete route/$name; oc delete service/$name; oc delete secret $name-shibd-conf; oc delete secret $name-apache-conf; oc delete secret $name-apache-html"
 echo ""
 echo "$service_url/Shibboleth.sso/Login"
 echo "$service_url/Shibboleth.sso/Logout"

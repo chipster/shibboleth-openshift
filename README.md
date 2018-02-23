@@ -186,7 +186,21 @@ If you make changes to Java code, you can build and deploy without pushing it to
 oc start-build shibboleth-java --from-dir . --follow
 ```
 
-For anything else, for example the configuration templates, you can simply run the `deploy-shibboleth.bash` again. It will run only a few seconds after the builds are there. 
+For anything else, for example the configuration templates, you can simply run the `deploy-shibboleth.bash` again. It will run only a few seconds after the builds are there.
+
+## Clean up
+
+If you want to delete all builds created by this script
+
+```bash
+oc delete bc/shibboleth; oc delete is/shibboleth; oc delete bc/shibbboleth-java; oc delete is/shibboleth-java
+```
+
+If you want to delete everything else created by this script. If you used different name, the script will print you the correct command.
+
+```bash
+oc delete dc/shibboleth; oc delete route/shibboleth; oc delete service/shibboleth; oc delete secret shibboleth-shibd-conf; oc delete secret shibboleth-apache-conf; oc delete secret shibboleth-apache-html;
+```
 
 ## Lessons learned
 
