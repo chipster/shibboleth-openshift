@@ -19,7 +19,7 @@ oc project
 ```
 > Using project "chipster-dev" on server "https://rahti.csc.fi:8443"
 
-The script assumes you have the command line tools `oc` (OpenShift command line client), `wget`, `jq` (for parsing JSON) and `gradle` (Java build) already installed on your development machine.
+The script assumes you have the command line tools `oc` (OpenShift command line client), `wget`, `jq` (for parsing JSON).
 
 ### Interactive
 
