@@ -2,7 +2,7 @@ FROM ubuntu:16.04
 
 # install apache, shibd and java
 RUN apt update -y \
-	&& apt install -y shibboleth-sp2-common libapache2-mod-shib2 apache2 shibboleth-sp2-utils openjdk-8-jdk gradle \
+	&& apt install -y shibboleth-sp2-common libapache2-mod-shib2 apache2 shibboleth-sp2-utils openjdk-8-jdk gradle curl \
 	&& apt clean
 
 
