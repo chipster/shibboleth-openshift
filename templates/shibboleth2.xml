@@ -11,14 +11,14 @@
 	Set ´attributePrefix="AJP_"´, because the Apache mod_ajp_proxy will pass through only variables 
 	starting with prefix ´AJP_´.
 	 -->
-	<ApplicationDefaults entityID="{{SERVICE_URL}}" REMOTE_USER="eppn persistent-id targeted-id" signing="front" encryption="false" attributePrefix="AJP_">
+	<ApplicationDefaults entityID="{{ENTITY_ID}}" REMOTE_USER="eppn persistent-id targeted-id" signing="front" encryption="false" attributePrefix="AJP_">
 
         <Sessions lifetime="28800" timeout="3600" relayState="ss:mem"
-                  checkAddress="false" handlerSSL="false" cookieProps="http">
+                  checkAddress="false" handlerSSL="false" cookieProps="http" handlerURL="{{PATH}}/Shibboleth.sso">
 
 			<!--  Configure the Discovery Service (former WAYF), where a user can select her own organization. -->
 			
-			<SSO discoveryProtocol="SAMLDS" discoveryURL="{{DISCOVERY_SERVICE}}" target="/secure"> SAML2 </SSO>
+			<SSO discoveryProtocol="SAMLDS" discoveryURL="{{DISCOVERY_SERVICE}}" target="{{PATH}}/secure"> SAML2 </SSO>
 
             <!-- SAML and local-only logout. -->
             <Logout>SAML2 Local</Logout>
