@@ -25,7 +25,7 @@ Check that you are logged in and in an OpenShfit project
 ```bash
 oc project
 ```
-> Using project "chipster-dev" on server "https://rahti.csc.fi:8443"
+> Using project "chipster" on server "https://rahti.csc.fi:8443"
 
 The script assumes you have the command line tools `oc` (OpenShift command line client), `wget`, `jq` (for parsing JSON).
 
@@ -40,11 +40,12 @@ Accept the defaults by hitting enter or set your own values.
 
 > set name [shibboleth]:
 
-This will be the name for your pod and route and will be used as a prefix many names in OpenShfit. Make sure it doesn't clash with anything you already have in the project. 
+This will be the name for your pod and route and will be used as a prefix many names in OpenShfit. Make sure it doesn't clash with anything you already have in the project. If you are going to join multiple Shibboleth federations, use the name of the 
+federation here.
 
-> set cert_dir [~/shibboleth_keys/chipster-dev.rahti.csc.fi]:
+> set cert_dir [~/shibboleth_keys/chipster.rahti.csc.fi]:
 
-The folder for the private key and certificate used by Shibboleth. New keys are generated, if they are not there already.
+The folder for the private key and certificate used by Shibboleth. New keys are generated, if they are not there already. If you are going to use multiple Shibboleth federations in the same project, select a unique folder name for each of them.
 
 > set metadata [https://haka.funet.fi/metadata/haka_test_metadata_signed.xml]: 	
 >
@@ -63,7 +64,7 @@ Your support email address which is shown in error pages.
 
  ### Scripts
  
-All settings can be set with paramaters. The script will still ask for all the settings that weren't set. Check the parameter names from the interactive output above.
+All settings can be set with command line paramaters. The script will still ask for all the settings that weren't set. Check the parameter names from the interactive output above.
  
 ```bash
 bash deploy-shibboleth.bash --name haka --support my@support.email
@@ -71,7 +72,7 @@ bash deploy-shibboleth.bash --name haka --support my@support.email
 
 ### Register
 
-The authentication doesn't work until your service is registered, but the script will print instructions for you. 
+The authentication doesn't work until your service is registered, but the script will print instructions for you assuming you are joining the Haka federation. Check the actual script output for the latest version.
 
 ```
 Register the service in Haka resource registry https://rr.funet.fi/rr
@@ -147,7 +148,7 @@ curl SERVICE_URL/Shibboleth.sso/Metadata
 
 ## Making changes
 
-There are two ways to replace the current demo application with your own. You can either make a separate project for your own application or do the modifications directly to the fork of this repository.
+There are two ways to replace the current demo application with your own. You can either make a separate project for your own application or do the modifications directly to the fork of this repository. You can find the instructions for both options below.
 
 This example shows how to get the authentication information to a small example service written in Java. What you do then with this information depends on the architectural style of your application. If you are building a monolithic application, you will probably build your whole application behind this Apache web server. On the other hand, in a microservice architecture this would be just another simple microservice, which will only trigger your own authentication system.
 
@@ -183,6 +184,10 @@ Most likely you have to update the dockerfile every now and then. You can do it 
   bash update_dockerfile.bash shibboleth
   oc start-build shibboleth --follow
 ```
+
+or
+
+
 ```bash
   bash update_dockerfile.bash shibboleth-java
   oc start-build shibboleth-java https://github.com/chipster/shibboleth-openshift.git --follow
@@ -204,7 +209,7 @@ If you want to delete all builds created by this script
 oc delete bc/shibboleth; oc delete is/shibboleth; oc delete bc/shibbboleth-java; oc delete is/shibboleth-java
 ```
 
-If you want to delete everything else created by this script. In case you used different name, the script will print you the correct command.
+See the following command if you want to delete everything else created by this script. In case you used different name, the script will print you the command with the correct names.
 
 ```bash
 oc delete dc/shibboleth; oc delete route/shibboleth; oc delete service/shibboleth; oc delete secret shibboleth-shibd-conf; oc delete secret shibboleth-apache-conf; oc delete secret shibboleth-apache-html;
