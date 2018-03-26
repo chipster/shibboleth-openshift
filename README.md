@@ -6,7 +6,7 @@ The [`deploy-shibboleth.bash`](deploy-shibboleth.bash) script deploys and config
 
 ## Version history
 ### Release 0.1
-The original version of this script deployed the Shibboleth to its own domain (route), e.g. `haka-chipster.rahtiapp.fi`. This caused [problems with browser's same-origin policy](https://github.com/chipster/shibboleth-openshift#same_origin_policy). The original version is tagged as [version 0.1]((https://github.com/chipster/shibboleth-openshift/releases/tag/release_0.1).
+The original version of this script deployed the Shibboleth to its own domain (route), e.g. `haka-chipster.rahtiapp.fi`. This caused [problems with browser's same-origin policy](https://github.com/chipster/shibboleth-openshift#same-origin-policy). The original version is tagged as [version 0.1](https://github.com/chipster/shibboleth-openshift/releases/tag/release_0.1).
 
 ### Current
 
