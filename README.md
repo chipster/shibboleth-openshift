@@ -255,7 +255,7 @@ which you can use to test these issues.
 
 ### Same-origin policy
 
-The original version of this script deployed the Shibboleth to its own domain, e.g. `haka-chipster.rahtiapp.fi` while the actual app was served from the domain `chipster.rahtiapp.fi`. It was possible to initiate a Shibboleth session and get the authentication token for the user, but it wasn't easy to pass the token between the domains safely. Multiple workaround were considered:
+The original version of this script deployed the Shibboleth to its own domain, e.g. `haka-chipster.rahtiapp.fi` while the actual app was served from the domain `chipster.rahtiapp.fi`. It was possible to initiate a Shibboleth session and get the authentication token for the user, but it wasn't easy to pass the token between the domains safely. Multiple workarounds were considered:
 
 - local storage
 
@@ -271,11 +271,11 @@ The servlet in haka-chipster.rahtiapp.fi can respond with a html page, which loa
 
 - AJAX request
 
-We could redirect right away and then the app could make a request to the haka-chipster.rahtiapp.fi to get the token. The haka-chipster.rahtiapp.fi servlet would have to [allow CORS requests](https://benjaminhorn.io/code/setting-cors-cross-origin-resource-sharing-on-apache-with-correct-response-headers-allowing-everything-through/) including `Access-Control-Allow-Credentials: true`. This would trust in browsers to check the Access-Control-Allow-Origin` header correctly which prevents JavaScript on other sites from querying these login details.
+We could redirect right away and then the app could make a request to the haka-chipster.rahtiapp.fi to get the token. The haka-chipster.rahtiapp.fi servlet would have to [allow CORS requests](https://benjaminhorn.io/code/setting-cors-cross-origin-resource-sharing-on-apache-with-correct-response-headers-allowing-everything-through/) including `Access-Control-Allow-Credentials: true`. This would trust in browsers to check the `Access-Control-Allow-Origin` header correctly which prevents JavaScript on other sites make similar requests to steal the token.
 
 - reverse proxy
 
-We could use a reverse proxy (e.g. Apache, Nginx, Jetty) to serve both the app and the Shibboleth from the same domain chipster.rahtiapp.fi. Then the servlet, protected by Shibboleth, is allowed to save the token to the same local storage which the app can access too. However, this makes the basic installation of the app more complicated even when the Haka isn't needed.
+We could use a reverse proxy (e.g. Apache, Nginx, Jetty) to serve both the app and the Shibboleth from the same domain chipster.rahtiapp.fi but in different paths like `/app` and `/sso`. Then the servlet, protected by Shibboleth, is allowed to save the token to the same local storage which the app can access too. However, the reverse proxy makes the basic installation of the app more complicated even when the Haka isn't needed.
 
 - OpenShift path based route
 
