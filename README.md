@@ -279,4 +279,4 @@ We could use a reverse proxy (e.g. Apache, Nginx, Jetty) to serve both the app a
 
 - OpenShift path based route
 
-Finally, the [OpenShift path based route](https://docs.openshift.com/enterprise/3.0/architecture/core_concepts/routes.html#path-based-routes) was used to serve these two different services from the same domain chipster.rahtiapp.fi. Also this allows both services to access the same local storage like the reverse proxy solution. When a basic installation without the Haka is needed, this route can be simply omitted.
+Finally, the [OpenShift path based route](https://docs.openshift.com/enterprise/3.0/architecture/core_concepts/routes.html#path-based-routes) was used to serve these two different services from the same domain chipster.rahtiapp.fi. Also this allows both services to access the same local storage like the reverse proxy solution. When a basic installation without Haka is needed, this route can be simply omitted.
