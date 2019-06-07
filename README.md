@@ -1,5 +1,11 @@
 # Shibboleth authentication in OpenShift for Java
 
+## Update 2019-06-07
+
+There is a nice authentication protocol called **OpenID Connect**. You should check if your authentication provider supports
+it before putting effort to *Shibboleth*. Generally speaking, you need a server for *Shibboleth*, but only a client library 
+for *OpenID Connect*.
+
 ## Introduction
 
 The [`deploy-shibboleth.bash`](deploy-shibboleth.bash) script deploys and configures an OpenShift container for doing Haka authentication for a simple Java application.
